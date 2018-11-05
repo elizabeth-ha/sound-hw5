@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "hbs": "^4.0.1",
     "mongoose": "^5.3.9"
   }
