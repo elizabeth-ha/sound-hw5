@@ -6,7 +6,6 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const Sound = mongoose.model('Sound');
 
-// app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(express.static(__dirname + '/public'));
 
 app.use(express.urlencoded());
@@ -50,7 +49,6 @@ app.get('/', function(req, res) {
     }
   }
 	Sound.find( params, function(err, sounds, count) {
-    // console.log(err, sounds, count);
 		res.render( 'index', {
 			sounds: sounds,
       count: req.session.count
@@ -89,6 +87,7 @@ app.post('/sounds/add', function(req, res) {
 app.get('/sounds/mine', function(req, res) {
   req.session.count = req.session.count || 0;
   req.session.count++;
+  
   res.render('mine', {
     sounds: req.session.mine,
     count: req.session.count
