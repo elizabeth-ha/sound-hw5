@@ -1,1 +1,19 @@
-page views: {{ count }}
+<h2>Sounds you added:</h2>
+<table>
+  <tr>
+    <th>What</th>
+    <th>Where</th>
+    <th>Date</th>
+    <th>Hour</th>
+    <th>Description</th>
+  </tr>
+  {{#each sounds}}
+  <tr>
+    <td>{{what}}</td>
+    <td>{{where}}</td>
+    <td>{{date}}</td>
+    <td>{{hour}}</td>
+    <td>{{desc}}</td>
+  </tr>
+  {{/each}}
+</table>

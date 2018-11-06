@@ -37,29 +37,25 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 // app.use(count);
 
-app.use(function(req, res, next){
-  res.locals.count = 0;
-  next();
-});
-
 app.get('/', function(req, res) {
   req.session.count = req.session.count || 0;
   req.session.count++;
   // res.send('viewed ' + n + ' times\n');
   console.log(req.session.count);
-	Sound.find(function(err, sounds, count) {
+
+  const params = req.query;
+  for (var propName in params) {
+    if (params[propName] == "") {
+      delete params[propName];
+    }
+  }
+	Sound.find( params, function(err, sounds, count) {
     // console.log(err, sounds, count);
 		res.render( 'index', {
 			sounds: sounds,
       count: req.session.count
 		});
 	});
-  // req.session.count = req.session.count || 1;
-  // req.session.count++;
-  // // res.send('viewed ' + n + ' times\n');
-  // console.log(req.session.count);
-  // res.locals.count++;
-  // res.render('mine', {count: req.session.count});
 });
 
 app.get('/sounds/add', function(req, res) {
@@ -71,29 +67,32 @@ app.get('/sounds/add', function(req, res) {
 });
 
 app.post('/sounds/add', function(req, res) {
-  req.session.count = req.session.count || 0;
-  req.session.count++;
-	// console.log(req.body.what);
-	new Sound({
+
+  var newSound = new Sound({
 		what: req.body.what,
     where: req.body.where,
     date: req.body.date,
     hour: req.body.hour,
     desc: req.body.desc
-	}).save(function(err, sound, count){
+	});
+
+  req.session.count = req.session.count || 0;
+  req.session.count++;
+
+  req.session.mine = req.session.mine || [];
+  req.session.mine.push(newSound);
+	newSound.save(function(err, sound, count){
 		res.redirect('/');
 	});
 });
 
-
-
-
-// app.get('/add', (req, res) => {
-//   const params = req.query;
-//
-//   res.render('add', defaultArt);
-// });
-
-
+app.get('/sounds/mine', function(req, res) {
+  req.session.count = req.session.count || 0;
+  req.session.count++;
+  res.render('mine', {
+    sounds: req.session.mine,
+    count: req.session.count
+  });
+});
 
 app.listen(3000);
